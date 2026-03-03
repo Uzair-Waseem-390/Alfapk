@@ -386,12 +386,23 @@
                 <i class="bi bi-pencil-fill"></i>
                 Alfapk Stationary
             </a>
-            <div class="ms-auto">
+            <div class="ms-auto d-flex gap-3">
+    <a href="{% url 'setup_owner' %}" class="btn login-btn">
+        <i class="bi bi-person-plus-fill"></i>
+        Setup Owner
+    </a>
+
+    <a href="{% url 'login' %}" class="btn login-btn">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Login
+    </a>
+</div>
+            {% comment %} <div class="ms-auto">
                 <a href="#" class="btn login-btn">
                     <i class="bi bi-box-arrow-in-right"></i>
                     Login
                 </a>
-            </div>
+            </div> {% endcomment %}
         </div>
     </nav>
     

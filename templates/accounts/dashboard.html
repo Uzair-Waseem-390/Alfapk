@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 25px;
+        color: white;
+        transition: transform 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-icon {
+        font-size: 3rem;
+        opacity: 0.3;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .quick-action-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .quick-action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        border-color: #667eea;
+    }
+    
+    .quick-action-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        color: white;
+        font-size: 1.8rem;
+    }
+    
+    .activity-timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 25px;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -30px;
+        top: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .timeline-item::after {
+        content: '';
+        position: absolute;
+        left: -34px;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #667eea;
+        border: 2px solid white;
+    }
+    
+    .timeline-date {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+    
+    .timeline-content {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+    }
+    
+    .welcome-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 40px;
+        color: white;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-section::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .welcome-section::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .welcome-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .role-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 15px;
+        position: relative;
+        z-index: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="welcome-title">
+                    Welcome back, {{ user.get_full_name }}! 👋
+                </h1>
+                <p class="welcome-subtitle">
+                    Here's what's happening with your inventory today.
+                </p>
+                <div class="role-badge">
+                    <i class="bi bi-shield"></i> {{ user.get_role_display }}
+                </div>
+            </div>
+            <div class="col-lg-4 text-end d-none d-lg-block">
+                <i class="bi bi-box-seam" style="font-size: 8rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stat-card position-relative">
+                <div class="stat-value">156</div>
+                <div class="stat-label">Total Products</div>
+                <i class="bi bi-box-seam stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stat-card position-relative" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Low Stock Items</div>
+                <i class="bi bi-exclamation-triangle stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stat-card position-relative" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="stat-value">₨ 45.5K</div>
+                <div class="stat-label">Today's Sales</div>
+                <i class="bi bi-graph-up stat-icon"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="stat-card position-relative" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Pending Orders</div>
+                <i class="bi bi-clock-history stat-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions and Recent Activity -->
+    <div class="row">
+        <!-- Quick Actions -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="#" class="text-decoration-none">
+                                <div class="quick-action-card">
+                                    <div class="quick-action-icon">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </div>
+                                    <h6>Add Product</h6>
+                                    <small class="text-muted">New inventory item</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="text-decoration-none">
+                                <div class="quick-action-card">
+                                    <div class="quick-action-icon">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </div>
+                                    <h6>New Order</h6>
+                                    <small class="text-muted">Create sale</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="text-decoration-none">
+                                <div class="quick-action-card">
+                                    <div class="quick-action-icon">
+                                        <i class="bi bi-truck"></i>
+                                    </div>
+                                    <h6>Receive Stock</h6>
+                                    <small class="text-muted">Update inventory</small>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="text-decoration-none">
+                                <div class="quick-action-card">
+                                    <div class="quick-action-icon">
+                                        <i class="bi bi-file-text"></i>
+                                    </div>
+                                    <h6>Reports</h6>
+                                    <small class="text-muted">View analytics</small>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-clock"></i> Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Today, 10:30 AM</div>
+                            <div class="timeline-content">
+                                <strong>New order #1234</strong> created for 5 items
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Today, 09:15 AM</div>
+                            <div class="timeline-content">
+                                <strong>Stock updated</strong> for Notebooks (50 units)
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Yesterday, 04:45 PM</div>
+                            <div class="timeline-content">
+                                <strong>Low stock alert</strong> for Pens (only 10 left)
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Yesterday, 02:30 PM</div>
+                            <div class="timeline-content">
+                                <strong>New supplier added</strong> - Stationary Plus
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-star"></i> Top Products</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">Parker Pens</h6>
+                                <small class="text-muted">Sold: 245 units</small>
+                            </div>
+                            <span class="badge bg-success">+12%</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">A4 Notebooks</h6>
+                                <small class="text-muted">Sold: 189 units</small>
+                            </div>
+                            <span class="badge bg-success">+8%</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">Art Sets</h6>
+                                <small class="text-muted">Sold: 156 units</small>
+                            </div>
+                            <span class="badge bg-warning">+5%</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-0">Markers</h6>
+                                <small class="text-muted">Sold: 134 units</small>
+                            </div>
+                            <span class="badge bg-danger">-2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> Sales Overview</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="salesChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Inventory Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="inventoryChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Sales Chart
+    const salesCtx = document.getElementById('salesChart').getContext('2d');
+    new Chart(salesCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Sales',
+                data: [12000, 19000, 15000, 25000, 22000, 30000],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Inventory Chart
+    const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+    new Chart(inventoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pens', 'Notebooks', 'Art Supplies', 'Files', 'Others'],
+            datasets: [{
+                data: [30, 25, 20, 15, 10],
+                backgroundColor: [
+                    '#667eea',
+                    '#764ba2',
+                    '#f093fb',
+                    '#f5576c',
+                    '#4facfe'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
